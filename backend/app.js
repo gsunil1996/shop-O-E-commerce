@@ -7,13 +7,13 @@ const cors = require("cors");
 const path = require("path");
 
 app.use(cors({
-  origin: 'http://localhost:8000',
+  origin: 'http://localhost:3000',
   credentials: true
 }));
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/", express.static(path.join(__dirname,"./uploads")));
+app.use("/", express.static(path.join(__dirname, "./uploads")));
 app.use("/test", (req, res) => {
   res.send("Hello world!");
 });

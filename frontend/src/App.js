@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ActivationPage from './pages/ActivationPage';
 
 function App() {
   return (
@@ -15,6 +16,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/sign-up" element={<SignupPage />} />
+        <Route
+          path="/activation/:activation_token"
+          element={<ActivationPage />}
+        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       <ToastContainer

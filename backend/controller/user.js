@@ -11,6 +11,7 @@ const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
+// register
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -40,7 +41,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
 
     const activationToken = createActivationToken(user);
 
-    const activationUrl = `http://localhost:8000/activation/${activationToken}`;
+    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
 
     try {
       await sendMail({
@@ -60,14 +61,14 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
   }
 });
 
-// create activation token
+// create activation token - register
 const createActivationToken = (user) => {
   return jwt.sign(user, process.env.ACTIVATION_SECRET, {
     expiresIn: "5m",
   });
 };
 
-// activate user
+// activate user - register
 router.post(
   "/activation",
   catchAsyncErrors(async (req, res, next) => {
