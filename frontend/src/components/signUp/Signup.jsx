@@ -6,6 +6,8 @@ import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { server } from "../../server";
+import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
 
 const Signup = () => {
     const [email, setEmail] = useState("");
@@ -13,6 +15,7 @@ const Signup = () => {
     const [password, setPassword] = useState("");
     const [visible, setVisible] = useState(false);
     const [avatar, setAvatar] = useState(null);
+    const [loader, setLoader] = useState(false);
 
     const handleFileInputChange = (e) => {
         const file = e.target.files[0];
@@ -29,6 +32,7 @@ const Signup = () => {
         newForm.append("name", name);
         newForm.append("email", email);
         newForm.append("password", password);
+        setLoader(true);
         axios
             .post(`${server}/user/create-user`, newForm, config)
             .then((res) => {
@@ -40,7 +44,9 @@ const Signup = () => {
             })
             .catch((error) => {
                 toast.error(error.response.data.message);
-            });
+            }).finally(() => {
+                setLoader(false);
+            })
     };
 
     return (
@@ -147,7 +153,7 @@ const Signup = () => {
                                     htmlFor="file-input"
                                     className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                                 >
-                                    <span className="cursor-pointer" >Upload a file</span>
+                                    <span className="cursor-pointer" >Upload Picture</span>
                                     <input
                                         type="file"
                                         name="avatar"
@@ -161,12 +167,10 @@ const Signup = () => {
                         </div>
 
                         <div>
-                            <button
-                                type="submit"
-                                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                            >
-                                Submit
-                            </button>
+
+                            <Button variant="contained" type="submit" className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" >
+                                {loader ? (<div> <CircularProgress style={{ color: "#fff", width: "30px", height: "30px" }} /> </div>) : "Submit"}
+                            </Button>
                         </div>
                         <div className={`${styles.noramlFlex} w-full`}>
                             <h4>Already have an account?</h4>

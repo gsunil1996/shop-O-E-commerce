@@ -4,6 +4,9 @@ import axios from "axios";
 import styles from '../../styles/styles';
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { server } from '../../server';
+import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
 
 
 const Login = () => {
@@ -11,9 +14,29 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [visible, setVisible] = useState(false);
+    const [loader, setLoader] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoader(true)
+        await axios
+            .post(
+                `${server}/user/login-user`,
+                {
+                    email,
+                    password,
+                },
+                { withCredentials: true }
+            )
+            .then((res) => {
+                toast.success("Login Success!");
+                navigate("/");
+            })
+            .catch((err) => {
+                toast.error(err.response.data.message);
+            }).finally(() => {
+                setLoader(false);
+            })
     };
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -79,21 +102,7 @@ const Login = () => {
                             </div>
                         </div>
 
-                        <div className={`${styles.noramlFlex} justify-between`}>
-                            <div className={`${styles.noramlFlex}`}>
-                                <input
-                                    type="checkbox"
-                                    name="remember-me"
-                                    id="remember-me"
-                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                />
-                                <label
-                                    htmlFor="remember-me"
-                                    className="ml-2 block text-sm text-gray-900"
-                                >
-                                    Remember me
-                                </label>
-                            </div>
+                        <div className="flex justify-end">
                             <div className="text-sm">
                                 <a
                                     href=".forgot-password"
@@ -105,12 +114,9 @@ const Login = () => {
                         </div>
 
                         <div>
-                            <button
-                                type="submit"
-                                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                            >
-                                Submit
-                            </button>
+                            <Button variant="contained" type="submit" className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" >
+                                {loader ? (<div> <CircularProgress style={{ color: "#fff", width: "30px", height: "30px" }} /> </div>) : "Submit"}
+                            </Button>
                         </div>
 
                         <div className={`${styles.noramlFlex} w-full`}>
@@ -122,8 +128,8 @@ const Login = () => {
 
                     </form>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
